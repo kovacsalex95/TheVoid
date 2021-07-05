@@ -1,0 +1,71 @@
+#pragma kernel GenerateData
+#include "SimplexNoise.compute"
+
+struct PlanetLayerStruct
+{
+    float scale;
+    float smoothness;
+    float ratio;
+};
+
+RWStructuredBuffer<float3> Colors;
+RWStructuredBuffer<float3> Vertices;
+
+float3 Normal;
+float TextureSize;
+
+float2 RemapHeight;
+
+float Seed;
+
+RWStructuredBuffer<PlanetLayerStruct> Continents;
+float ContinentsLength;
+float ContinentsSum;
+
+RWStructuredBuffer<PlanetLayerStruct> Details;
+float DetailsLength;
+float DetailsSum;
+
+
+float remap(float origFrom, float origTo, float targetFrom, float targetTo, float value) {
+    return lerp(targetFrom, targetTo, (value - origFrom) / (origTo - origFrom));
+}
+
+
+[numthreads(8, 8, 1)]
+void GenerateData(uint3 id : SV_DispatchThreadID)
+{
+    int verticeIndex = id.y * TextureSize + id.x;
+    float3 vertice = Vertices[verticeIndex];
+
+    float3 seedVector = float3(Seed * 1.2, Seed * 0.7, Seed * 1.4);
+
+    float height = 0;
+    float mask = 0; 
+
+    // Continents
+    for (int i = 0; i < ContinentsLength; i++) {
+        float _sample = clamp(pow(clamp((snoise(vertice.xyz * Continents[i].scale * 200 + seedVector) + 1) / 2, 0, 1), Continents[i].smoothness > 0 ? Continents[i].smoothness : 1), 0, 1);
+        height += _sample * (Continents[i].ratio / ContinentsSum);
+    }
+
+    mask = height;
+
+    // Details
+    for (int i = 0; i < DetailsLength; i++) {
+        float _sample = clamp(pow(clamp((snoise(vertice.xyz * Details[i].scale * 200 + seedVector) + 1) / 2, 0, 1), Details[i].smoothness > 0 ? Details[i].smoothness : 1), 0, 1);
+        height += _sample * (Details[i].ratio / DetailsSum) * mask;
+    }
+
+    height /= 2;
+
+    height = clamp(remap(clamp(RemapHeight.x, 0, 0.5), clamp(RemapHeight.y, 0.5, 1), 0, 1, height), 0, 1);
+
+    float sampleR = height;
+    float sampleG = height;
+    float sampleB = height;
+
+    int colorIndex = id.y * TextureSize + id.x;
+
+    Colors[colorIndex] = float3(sampleR, sampleG, sampleB);
+}

@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: affaa1a04ec744c46ac4374ae7a18add, type: 3}
+  m_Name: EarthLikeSurface
+  m_EditorClassIdentifier: 
+  radius: 1000
+  heightRange: {x: 0, y: 0.2}
+  remapRange: {x: 0, y: 1}
+  continents:
+  - name: Continents
+    enabled: 1
+    scale: 0.83
+    smoothness: 1.1
+    ratio: 10
+  - name: Islands
+    enabled: 1
+    scale: 6.53
+    smoothness: 0.72
+    ratio: 1
+  detail:
+  - name: Large
+    enabled: 1
+    scale: 2.01
+    smoothness: 0.5
+    ratio: 10
+  - name: Medium
+    enabled: 1
+    scale: 3.36
+    smoothness: 0.5
+    ratio: 7.34
+  - name: Small
+    enabled: 1
+    scale: 7.42
+    smoothness: 0.59
+    ratio: 1
+  underwater: []
