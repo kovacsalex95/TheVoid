@@ -11,9 +11,20 @@ public class GameController : MonoBehaviour
     public TMPro.TextMeshProUGUI FpsCounter;
     public Material skyboxMaterial;
 
+    World closestWorld = null;
+    float closestWorldRadius = 0;
+
     void Awake()
     {
         input = GetComponent<PlayerInput>();
+        closestWorld = Util.getClosestWorld(Camera.main.transform.position);
+
+        if (closestWorld)
+        {
+            closestWorldRadius = closestWorld.getAtmosphereRadius();
+            if (skyboxMaterial)
+                skyboxMaterial.SetFloat("_AtmoRadius", closestWorldRadius);
+        }
     }
 
     private void Update()
@@ -23,21 +34,19 @@ public class GameController : MonoBehaviour
             FpsCounter.SetText(string.Format("{0} FPS", Mathf.RoundToInt(1f / Time.deltaTime)));
         }
 
-
-
-        if (skyboxMaterial)
+        if (skyboxMaterial && closestWorld)
         {
-            Vector3 worldPosition = Camera.main.WorldToScreenPoint(Vector3.zero);
-            Vector2 worldPositionRatio;
-            worldPositionRatio.x = worldPosition.x / (float)Screen.width;
-            worldPositionRatio.y = worldPosition.y / (float)Screen.height;
-            skyboxMaterial.SetVector("_WorldPosition", worldPositionRatio);
+            float distanceToWorld = Vector3.Distance(Camera.main.transform.position, closestWorld.transform.position);
+            skyboxMaterial.SetFloat("_DistanceToWorld", distanceToWorld);
         }
     }
 
     private void OnApplicationQuit()
     {
         if (skyboxMaterial)
-            skyboxMaterial.SetVector("_WorldPosition", new Vector2(0.5f, 0.5f));
+        {
+            skyboxMaterial.SetFloat("_DistanceToWorld", 100);
+            skyboxMaterial.SetFloat("_AtmoRadius", 1);
+        }
     }
 }
