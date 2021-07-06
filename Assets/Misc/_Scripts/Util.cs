@@ -26,4 +26,32 @@ public class Util : MonoBehaviour
     {
         return helper.agentFloorLayers;
     }
+
+    public static World getClosestWorld(Vector3 position)
+    {
+        World result = null;
+        float closestDistance = Mathf.Infinity;
+
+        World[] worlds = FindObjectsOfType<World>();
+        foreach (World world in worlds)
+        {
+            float distanceToWorld = Vector3.Distance(position, world.transform.position);
+            if (distanceToWorld < closestDistance)
+            {
+                closestDistance = distanceToWorld;
+                result = world;
+            }
+        }
+
+        return result;
+    }
+
+    public static lxkvcs.PlanetGen.Planet getClosestPlanet(Vector3 position)
+    {
+        World closestWorld = getClosestWorld(position);
+        if (closestWorld == null)
+            return null;
+
+        return closestWorld.getPlanet();
+    }
 }
