@@ -28,7 +28,19 @@ namespace lxkvcs.PlanetGen
                     planet.GeneratePlanet();
             }
 
+            GUILayout.Space(8);
+
+            if (GUILayout.Button("Randomize Planet")) {
+                planet.Seed = Mathf.Round(Random.Range(0, 40000f)) / 100f - 200f;
+                planet.GeneratePlanet();
+            }
+
             GUILayout.Space(16);
+
+            if (GUILayout.Button("Refresh Material"))
+            {
+                planet.RefreshFaceMaterials();
+            }
 
             using (var check = new EditorGUI.ChangeCheckScope())
             {
@@ -40,10 +52,6 @@ namespace lxkvcs.PlanetGen
             GUILayout.Space(32);
 
             DrawSettingsEditor(planet.surfaceSettings, planet.PropertyChanged, ref planet.surfaceSettingsFoldout, ref surfaceEditor);
-
-            GUILayout.Space(32);
-
-            DrawSettingsEditor(planet.textureSettings, planet.PropertyChanged, ref planet.textureSettingsFoldout, ref textureEditor);
         }
 
         void DrawSettingsEditor(Object settings, System.Action onSettingsUpdated, ref bool foldout, ref Editor editor)
