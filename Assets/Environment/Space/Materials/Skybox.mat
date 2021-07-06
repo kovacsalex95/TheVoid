@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Skybox
-  m_Shader: {fileID: 104, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: -6465566751694194690, guid: 2b532a9fd2839584bb62f362f0129e6b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -123,6 +123,7 @@ Material:
     m_Floats:
     - Vector1_ae0c4f42d1fa427f8db606f6aeb4f671: 0
     - _AlphaClip: 0
+    - _AtmoRadius: 1
     - _AtmosphereOpacity: 0.6
     - _Blend: 0
     - _BumpScale: 1
@@ -132,9 +133,11 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DistanceToWorld: 100
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _Exposure: 1
+    - _FadeDistance: 100
     - _FadeMultiply: 3.5
     - _FadePower: 3
     - _FlatWidthRatio: 1.7777
