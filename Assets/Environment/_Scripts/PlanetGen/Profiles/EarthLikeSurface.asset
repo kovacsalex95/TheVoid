@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: affaa1a04ec744c46ac4374ae7a18add, type: 3}
   m_Name: EarthLikeSurface
   m_EditorClassIdentifier: 
+  planetMaterial: {fileID: 2100000, guid: 2817cedf07a33d94dbd2d4f5dacf04f5, type: 2}
   radius: 1000
   heightRange: {x: 0, y: 0.2}
   remapRange: {x: 0, y: 1}
