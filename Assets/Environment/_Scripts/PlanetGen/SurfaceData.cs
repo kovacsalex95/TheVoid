@@ -8,6 +8,9 @@ namespace lxkvcs.PlanetGen
     public class SurfaceData : ScriptableObject
     {
         [SerializeField]
+        public Material planetMaterial;
+
+        [SerializeField]
         public float radius = 10000;
 
         [SerializeField]
