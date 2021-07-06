@@ -30,6 +30,10 @@ public class PlayerAgent : Agent
     public float overViewFov = 80f;
     float cameraFovTarget;
 
+    float normalDegree;
+    public float overViewCameraDegree = 90f;
+    float cameraDegreeTarget;
+
     bool overviewMode = false;
 
     public override void AgentStart()
@@ -39,6 +43,7 @@ public class PlayerAgent : Agent
         controller = Util.gameController();
         normalDistance = playerCamera.transform.localPosition.z;
         normalFov = playerCamera.fieldOfView;
+        normalDegree = playerCamera.transform.parent.localEulerAngles.x;
     }
     public override void AgentBeforeUpdate()
     {
@@ -52,6 +57,7 @@ public class PlayerAgent : Agent
 
         cameraDistanceTarget = overviewMode ? overViewDistance : normalDistance;
         cameraFovTarget = overviewMode ? overViewFov : normalFov;
+        cameraDegreeTarget = overviewMode ? overViewCameraDegree : normalDegree;
 
         float velocity = 0;
 
@@ -62,10 +68,10 @@ public class PlayerAgent : Agent
         velocity = 0;
 
         playerCamera.fieldOfView = Mathf.SmoothDamp(playerCamera.fieldOfView, cameraFovTarget, ref velocity, 0.2f);
-    }
 
-    public void TestButton()
-    {
-        Debug.Log("hello");
+        velocity = 0;
+        Vector3 cameraLocalDir = playerCamera.transform.parent.localEulerAngles;
+        cameraLocalDir.x = Mathf.SmoothDamp(cameraLocalDir.x, cameraDegreeTarget, ref velocity, 0.2f);
+        playerCamera.transform.parent.localEulerAngles = cameraLocalDir;
     }
 }
