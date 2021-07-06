@@ -54,25 +54,7 @@ public abstract class Agent : MonoBehaviour
 
     void AssignClosestWorld()
     {
-        World[] worlds = FindObjectsOfType<World>();
-
-        if (worlds.Length == 0)
-            return;
-
-        if (worlds.Length == 1)
-            assignedWorld = worlds[0];
-
-        float closestDistance = Mathf.Infinity;
-
-        foreach(World w in worlds)
-        {
-            float distance = Vector3.Distance(w.transform.position, transform.position) - w.getPlanet().surfaceSettings.radius;
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                assignedWorld = w;
-            }
-        }
+        assignedWorld = Util.getClosestWorld(transform.position);
     }
 
     void CreateTransformHierarchy()
