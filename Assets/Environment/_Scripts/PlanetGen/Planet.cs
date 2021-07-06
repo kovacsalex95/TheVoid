@@ -9,18 +9,8 @@ namespace lxkvcs.PlanetGen
     /*
     
         TODO:
-        
-            -   Weird spike bug
-
-            -   Resolution change bug
-
-            -   Edit mode / Finalize
-                -   low res on edit mode
-                -   save only on finalize
 
             -   Steepness map
-
-            -   Normal map
 
     */
 
@@ -58,9 +48,6 @@ namespace lxkvcs.PlanetGen
         public HeightmapResolution faceResolution = HeightmapResolution._256x256;
         int oldFaceResolution = -1;
 
-        public HeightmapResolution heightmapResolution = HeightmapResolution._256x256;
-        int oldHeightmapResolution = -1;
-
 
         public SurfaceData surfaceSettings;
         float oldRadius = 0;
@@ -68,7 +55,6 @@ namespace lxkvcs.PlanetGen
         public float Seed = 500;
 
 
-        public TextureData textureSettings;
         PlanetLayerStruct[] continentLayerStructs = null;
         float continentLayersSum;
         PlanetLayerStruct[] detailLayerStructs = null;
@@ -76,8 +62,6 @@ namespace lxkvcs.PlanetGen
 
         [HideInInspector]
         public bool surfaceSettingsFoldout;
-        [HideInInspector]
-        public bool textureSettingsFoldout;
 
         PlanetFace[] GetFaces()
         {
@@ -169,9 +153,6 @@ namespace lxkvcs.PlanetGen
 
             CheckDataFolders();
 
-            if (!previewMode)
-                textureSettings.GenerateLayerMaps(AssetsPath + "/GeneratedData/" + uniqueId);
-
             CheckFaceObjects();
 
             faces = GetFaces();
@@ -212,12 +193,11 @@ namespace lxkvcs.PlanetGen
 
         void CheckFaceObjects()
         {
-            if (faces.Length == FACECOUNT && surfaceSettings.radius == oldRadius && oldFaceResolution == previewScale((int)faceResolution) && oldHeightmapResolution == previewScale((int)heightmapResolution))
+            if (faces.Length == FACECOUNT && surfaceSettings.radius == oldRadius && oldFaceResolution == previewScale((int)faceResolution))
                 return;
 
             oldRadius = surfaceSettings.radius;
             oldFaceResolution = previewScale((int)faceResolution);
-            oldHeightmapResolution = previewScale((int)heightmapResolution);
 
             if (!previewMode)
                 GenerateFaceObjects();
@@ -226,7 +206,7 @@ namespace lxkvcs.PlanetGen
                 int faceIndex = 0;
                 foreach(PlanetFace face in faces)
                 {
-                    face.UpdateProperties(faceIndex, previewScale((int)faceResolution), previewScale((int)heightmapResolution), surfaceSettings.radius);
+                    face.UpdateProperties(faceIndex, previewScale((int)faceResolution), surfaceSettings.radius);
                     faceIndex++;
                 }
             }
@@ -253,10 +233,20 @@ namespace lxkvcs.PlanetGen
             PlanetFace face = parentObj.AddComponent<PlanetFace>();
 
             parentObj.gameObject.AddComponent<MeshFilter>();
-            parentObj.gameObject.AddComponent<MeshRenderer>().sharedMaterial = new Material(textureSettings.planetMaterial);
+            parentObj.gameObject.AddComponent<MeshRenderer>().sharedMaterial = new Material(surfaceSettings.planetMaterial);
             parentObj.gameObject.AddComponent<MeshCollider>();
 
-            face.UpdateProperties(faceIndex, (int)faceResolution, (int)heightmapResolution, surfaceSettings.radius);
+            face.UpdateProperties(faceIndex, (int)faceResolution, surfaceSettings.radius);
+        }
+
+        public void RefreshFaceMaterials()
+        {
+            PlanetFace[] faces = GetFaces();
+            foreach(PlanetFace face in faces)
+            {
+                if (face.meshRenderer)
+                    face.meshRenderer.sharedMaterial = new Material(surfaceSettings.planetMaterial);
+            }
         }
 
         void GenerateTerrainFaces()
@@ -300,7 +290,7 @@ namespace lxkvcs.PlanetGen
         {
             PlanetFace face = faces[faceIndex];
 
-            int textureSize = previewScale((int)heightmapResolution);
+            int textureSize = previewScale((int)faceResolution);
             int layerStride = PlanetLayer.stride;
 
             // Vertices buffer
@@ -348,9 +338,6 @@ namespace lxkvcs.PlanetGen
             planetDataShader.Dispatch(kernelIndex, textureSize / 8, textureSize / 8, 1);
 
             colorsBuffer.GetData(terrainPixels);
-            Color[] pixels = new Color[terrainPixels.Length];
-            for (int i = 0; i < terrainPixels.Length; i++)
-                pixels[i] = new Color(terrainPixels[i].x, 0, 0);
 
             // Dispose
             verticesBuffer.Dispose();
@@ -358,28 +345,50 @@ namespace lxkvcs.PlanetGen
             continentLayersBuffer.Dispose();
             detailLayersBuffer.Dispose();
 
-            // Create data texture
-            Texture2D terrainData = new Texture2D(textureSize, textureSize, TextureFormat.ARGB32, false);
-            terrainData.filterMode = FilterMode.Bilinear;
-            terrainData.wrapMode = TextureWrapMode.Mirror;
-            terrainData.SetPixels(pixels);
-            terrainData.Apply();
+            // Generate steepness data
+            GenerateTerrainSteepness(faceIndex, terrainPixels);
+        }
 
-            // Save data texture
-            string dataPath = AssetsPath + "/GeneratedData/" + uniqueId + "/Data/face" + faceIndex.ToString() + ".asset";
+        void GenerateTerrainSteepness(int faceIndex, Vector3[] pixels)
+        {
+            PlanetFace face = faces[faceIndex];
 
+            int textureSize = previewScale((int)faceResolution);
 
-#if UNITY_EDITOR
-            if (!previewMode)
-                AssetDatabase.CreateAsset(terrainData, dataPath);
-            face.meshRenderer.sharedMaterial.SetTexture(textureName, previewMode ? terrainData : AssetDatabase.LoadAssetAtPath(dataPath, typeof(Texture2D)) as Texture2D);
-#else
-            face.meshRenderer.sharedMaterial.SetTexture(textureName, terrainData);
-#endif
+            // Pixel buffer
+            ComputeBuffer colorsBuffer = new ComputeBuffer(pixels.Length, sizeof(float) * 3);
+            colorsBuffer.SetData(pixels);
 
-            face.meshRenderer.sharedMaterial.SetVector("_ElevationRange", surfaceSettings.heightRange * surfaceSettings.radius);
+            // Add buffers
+            int kernelIndex = planetDataShader.FindKernel("CalculateSteepness");
 
-            face.ConstructMesh(faceIndex, terrainData, surfaceSettings.heightRange, previewMode);
+            planetDataShader.SetBuffer(kernelIndex, "Colors", colorsBuffer);
+            planetDataShader.SetFloat("TextureSize", textureSize);
+
+            // Dispatch
+            planetDataShader.Dispatch(kernelIndex, textureSize / 8, textureSize / 8, 1);
+
+            colorsBuffer.GetData(pixels);
+
+            // Dispose
+            colorsBuffer.Dispose();
+
+            // Full the holes
+            for (int i=0; i < pixels.Length; i++)
+            {
+                int y = Mathf.FloorToInt((float)i / (float)textureSize);
+                int x = i - y * textureSize;
+
+                if (x == textureSize - 1 && y == textureSize - 1)
+                    pixels[i].y = pixels[i - textureSize - 1].y;
+                else if (x == textureSize - 1)
+                    pixels[i].y = pixels[i - 1].y;
+                else if (y == textureSize - 1)
+                    pixels[i].y = pixels[i - textureSize].y;
+            }
+
+            // Construct mesh
+            face.ConstructMesh(faceIndex, pixels, surfaceSettings.heightRange, previewMode);
         }
     }
 

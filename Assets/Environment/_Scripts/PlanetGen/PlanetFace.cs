@@ -25,9 +25,6 @@ namespace lxkvcs.PlanetGen
         [SerializeField, HideInInspector]
         public MeshRenderer meshRenderer = null;
 
-        [SerializeField, HideInInspector]
-        public int dataResolution = -1;
-
 
         [SerializeField, HideInInspector]
         Vector3 axisA;
@@ -50,17 +47,14 @@ namespace lxkvcs.PlanetGen
             }
         }
 
-        public void UpdateProperties(int faceIndex, int faceResolution, int dataResolution, float radius)
+        public void UpdateProperties(int faceIndex, int faceResolution, float radius)
         {
             meshFilter = GetComponent<MeshFilter>();
             meshRenderer = GetComponent<MeshRenderer>();
             meshCollider = GetComponent<MeshCollider>();
 
-            if (dataVertices == null || dataResolution != this.dataResolution)
-            {
-                dataVertices = SphereFaceVertices(faceIndex, dataResolution);
-                this.dataResolution = dataResolution;
-            }
+            if (dataVertices == null || faceResolution != this.faceResolution)
+                dataVertices = SphereFaceVertices(faceIndex, faceResolution);
 
             meshRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             meshRenderer.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
@@ -78,13 +72,14 @@ namespace lxkvcs.PlanetGen
             axisB = Vector3.Cross(Planet.directions[faceIndex], axisA);
         }
 
-        public void ConstructMesh(int faceIndex, Texture2D heightmap, Vector2 heightRange, bool previewMode)
+        public void ConstructMesh(int faceIndex, Vector3[] terrainData, Vector2 heightRange, bool previewMode)
         {
             Mesh faceMesh = new Mesh();
             faceMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
             int colliderResolution = faceResolution;
 
             Vector3[] vertices = new Vector3[colliderResolution * colliderResolution];
+            Color[] colors = new Color[vertices.Length];
             Vector3[] normals = new Vector3[vertices.Length];
             Vector2[] uvs = new Vector2[vertices.Length];
             int[] triangles = new int[(colliderResolution - 1) * (colliderResolution - 1) * 6];
@@ -99,10 +94,10 @@ namespace lxkvcs.PlanetGen
                     Vector2 percent = new Vector2(x, y) / (colliderResolution - 1);
                     Vector3 pointOnUnitCube = localUp + (percent.x - .5f) * 2 * axisA + (percent.y - .5f) * 2 * axisB;
 
-                    int terrainHeightX = Mathf.RoundToInt(percent.x * (float)(heightmap.width - 1));
-                    int terrainHeightY = Mathf.RoundToInt(percent.y * (float)(heightmap.width - 1));
+                    Vector3 dataRaw = terrainData[i];
+                    colors[i] = new Color(dataRaw.x, dataRaw.y, dataRaw.z);
 
-                    float terrainHeightRaw = Mathf.Clamp01(heightmap.GetPixel(terrainHeightX, terrainHeightY).r);
+                    float terrainHeightRaw = Mathf.Clamp01(dataRaw.x);
                     float terrainHeight = Mathf.Lerp(Mathf.Min(heightRange.x, heightRange.y), Mathf.Max(heightRange.x, heightRange.y), terrainHeightRaw);
 
                     Vector3 pointOnUnitSphere = pointOnUnitCube.normalized * (1 + terrainHeight);
@@ -130,6 +125,7 @@ namespace lxkvcs.PlanetGen
             faceMesh.triangles = triangles;
             faceMesh.uv = uvs;
             faceMesh.normals = normals;
+            faceMesh.colors = colors;
 
             string meshPath = planet.AssetsPath + "/GeneratedData/" + planet.uniqueId + "/Mesh/faceCollider" + faceIndex.ToString() + ".asset";
 
