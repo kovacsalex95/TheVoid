@@ -11,6 +11,7 @@ public abstract class Agent : MonoBehaviour
     protected bool snapOnUpdate = true;
 
     protected float rootYOffset = 0f;
+    protected Vector3 rootDirection = Vector3.zero;
 
     protected float movementSpeedMS = 9f;
 
@@ -85,7 +86,7 @@ public abstract class Agent : MonoBehaviour
         yOffsetObject.transform.localScale = Vector3.one;
 
         transform.parent = yOffsetObject.transform;
-        transform.localEulerAngles = Vector3.zero;
+        transform.localEulerAngles = rootDirection;
         transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
 
