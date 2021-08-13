@@ -2,8 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraController : Agent
+public class CameraAgent : Agent
 {
+
+
+    public override void AgentBeforeStart()
+    {
+        rootYOffset = 200;
+    }
+
     public override void AgentStart()
     {
         

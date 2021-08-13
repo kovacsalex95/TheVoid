@@ -7,12 +7,12 @@ public abstract class Agent : MonoBehaviour
 {
     protected GameController controller = null;
 
-    public bool snapOnStart = true;
-    public bool snapOnUpdate = true;
+    protected bool snapOnStart = true;
+    protected bool snapOnUpdate = true;
 
-    public float rootYOffset = 0f;
+    protected float rootYOffset = 0f;
 
-    public float movementSpeedMS = 9f;
+    protected float movementSpeedMS = 9f;
 
     [System.NonSerialized]
     public World assignedWorld = null;
@@ -34,6 +34,8 @@ public abstract class Agent : MonoBehaviour
 
     void Awake()
     {
+        AgentBeforeStart();
+
         controller = Util.gameController();
         floorMask = Util.agentFloorMask();
 
@@ -155,6 +157,8 @@ public abstract class Agent : MonoBehaviour
         Gizmos.DrawLine(rayCasterTransform.position, assignedWorld.transform.position);
     }
 #endif
+
+    public abstract void AgentBeforeStart();
 
     public abstract void AgentStart();
 
