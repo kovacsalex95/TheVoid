@@ -1,0 +1,128 @@
+{
+    "name": "Controls",
+    "maps": [
+        {
+            "name": "Camera",
+            "id": "7644de7a-42a5-4fec-a322-23b80fc76c0d",
+            "actions": [
+                {
+                    "name": "Mouse Movement",
+                    "type": "Value",
+                    "id": "f0b0f49b-51b4-4424-b50d-45a3c4f75a89",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Mouse Position",
+                    "type": "Value",
+                    "id": "173c0b99-b557-4bbe-8c82-8e3f6fa8e742",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Mouse Scroll",
+                    "type": "Value",
+                    "id": "6a78243c-8b35-44e6-bc65-96892acc755f",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Mouse Left Button",
+                    "type": "Value",
+                    "id": "ca63f5b1-3550-4164-b2e1-1c24afb674b9",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "Hold"
+                },
+                {
+                    "name": "Mouse Right Button",
+                    "type": "Value",
+                    "id": "2b4d864d-828d-4d1d-bb1c-0263d27af158",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "Hold"
+                },
+                {
+                    "name": "Mouse Middle Button",
+                    "type": "Value",
+                    "id": "77c1cc59-3658-47ab-b8a0-60c947350157",
+                    "expectedControlType": "Analog",
+                    "processors": "",
+                    "interactions": "Hold"
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "59fada1e-596e-4b9c-b541-2923c98e86bc",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2b59cb36-7920-4ff4-bcd3-c6deb65c90ec",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Position",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8ca6d900-8f4d-4159-afd3-edef64153b0b",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Scroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c760ecd1-473a-423e-a26d-63b8292431a8",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Left Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "008988a1-306c-495a-a09a-1ececd882d94",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Right Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "93104938-d66d-4bde-b9f8-2348cd47618f",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Middle Button",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

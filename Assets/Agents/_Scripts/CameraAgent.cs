@@ -19,6 +19,11 @@ public class CameraAgent : Agent
     [Range(0f, 1f)]
     public float distance = 0.5f;
 
+    public float distanceStep = 10;
+
+    public float minSpeed = 2f;
+    public float maxSpeed = 30f;
+
     new Camera camera;
 
     float maxDistance => assignedWorldRadius * maxDistanceRatio;
@@ -30,6 +35,9 @@ public class CameraAgent : Agent
     float targetFov => Mathf.Lerp(minFov, maxFov, distance * distance);
     float currentFov;
 
+    bool mouseRight = false;
+    Vector2 mouseDelta = Vector2.zero;
+    float mouseScroll = 0;
 
     public override void AgentBeforeStart()
     {
@@ -45,6 +53,7 @@ public class CameraAgent : Agent
     }
     public override void AgentBeforeUpdate()
     {
+        UpdateInput();
         UpdateCameraDistance();
     }
 
@@ -55,6 +64,8 @@ public class CameraAgent : Agent
 
     private void UpdateCameraDistance()
     {
+        distance = Mathf.Clamp01(distance + mouseScroll * (1f / distanceStep));
+
         if (distance == oldDistance && currentDistance == targetDistance && currentFov == targetFov)
             return;
 
@@ -69,6 +80,16 @@ public class CameraAgent : Agent
 
     private void UpdateCameraPosition()
     {
+        movementSpeed = Mathf.Lerp(minSpeed, maxSpeed, distance * distance);
 
+        if (mouseRight && mouseDelta.magnitude > 0)
+            Move(-mouseDelta, true, 20);
+    }
+
+    private void UpdateInput()
+    {
+        mouseRight = controller.input.actions["Mouse Right Button"].ReadValue<float>() != 0;
+        mouseDelta = controller.input.actions["Mouse Movement"].ReadValue<Vector2>();
+        mouseScroll = -CalcUtil.Normalize(controller.input.actions["Mouse Scroll"].ReadValue<float>());
     }
 }

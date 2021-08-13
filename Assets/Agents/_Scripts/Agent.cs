@@ -13,7 +13,7 @@ public abstract class Agent : MonoBehaviour
     protected float rootYOffset = 0f;
     protected Vector3 rootDirection = Vector3.zero;
 
-    protected float movementSpeedMS = 9f;
+    protected float movementSpeed = 9f;
 
     [System.NonSerialized]
     public World assignedWorld = null;
@@ -140,16 +140,28 @@ public abstract class Agent : MonoBehaviour
         AgentUpdate();
     }
 
-    public void Move(Vector2 moveVector)
+    public void Move(Vector2 moveVector, bool snap = false, float steps = 1)
     {
         Vector3 moveVector3 = new Vector3(moveVector.x, 0, moveVector.y);
+        moveVector3 *= Time.deltaTime * 10f * movementSpeed;
 
-        moveVector3 *= Time.deltaTime * 10f * movementSpeedMS;
+        Vector3 playerMoveVector;
+        Vector3 rootVector3;
+        Vector3 vectorStep;
 
-        Vector3 playerMoveVector = rayCasterTransform.TransformVector(moveVector3);
-        Vector3 rootVector3 = rootTransform.InverseTransformVector(playerMoveVector);
+        for (int i = 0; i < steps; i++)
+        {
+            playerMoveVector = rayCasterTransform.TransformVector(moveVector3);
+            rootVector3 = rootTransform.InverseTransformVector(playerMoveVector);
+            vectorStep = rootVector3 * (1f / steps);
+            rootTransform.Translate(vectorStep);
 
-        rootTransform.Translate(rootVector3);
+            if (snap)
+                LookAtWorld();
+        }
+
+        if (snap)
+            SnapToWorld();
     }
 
     public void SetOffsetY(float offsetY)

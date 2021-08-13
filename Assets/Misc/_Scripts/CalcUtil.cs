@@ -25,5 +25,10 @@ namespace Assets.Misc._Scripts
             Vector3 vel = Vector3.zero;
             return Vector3.SmoothDamp(current, target, ref vel, time);
         }
+
+        public static float Normalize(float value)
+        {
+            return value == 0f ? 0f : (value > 0f ? 1f : -1f);
+        }
     }
 }
