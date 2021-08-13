@@ -4,67 +4,8 @@
         {
             "name": "Player",
             "id": "670cda5d-baa2-4803-8bfd-5059c09fc930",
-            "actions": [
-                {
-                    "name": "Move",
-                    "type": "Value",
-                    "id": "c2986b33-dc2a-4591-a9cb-f6e0a1320de6",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Look",
-                    "type": "Value",
-                    "id": "62f55ce4-0427-4bbe-b8aa-ddbce1318ddf",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Map",
-                    "type": "Value",
-                    "id": "89ee8e29-f21d-45d2-9143-2d12136ef690",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "32fb83c5-a160-4593-a2b0-e14370aef6a3",
-                    "path": "<Gamepad>/leftStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "c59fa9ff-62c6-4926-9902-7674659c53b5",
-                    "path": "<Gamepad>/rightStick",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Look",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "86c6f508-d181-4187-80a5-9a6801649635",
-                    "path": "<Gamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Map",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
+            "actions": [],
+            "bindings": []
         }
     ],
     "controlSchemes": []

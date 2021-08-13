@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public abstract class Agent : MonoBehaviour
 {
-    GameController controller = null;
+    protected GameController controller = null;
 
     public bool snapOnStart = true;
     public bool snapOnUpdate = true;
@@ -26,11 +26,11 @@ public abstract class Agent : MonoBehaviour
     [System.NonSerialized]
     public Transform yOffsetTransform = null;
 
-    Transform rayCasterTransform = null;
+    protected Transform rayCasterTransform = null;
 
-    Vector3 oldPosition = Vector3.zero;
+    protected Vector3 oldPosition = Vector3.zero;
 
-    LayerMask floorMask;
+    protected LayerMask floorMask;
 
     void Awake()
     {
@@ -93,7 +93,7 @@ public abstract class Agent : MonoBehaviour
         GameObject rayCasterObject = new GameObject(string.Format("AgentRaycaster_{0}", gameObject.name));
         rayCasterObject.transform.parent = orientationObject.transform;
         rayCasterObject.transform.localEulerAngles = Vector3.zero;
-        rayCasterObject.transform.localPosition = new Vector3(0, assignedWorld.getPlanet().surfaceSettings.radius, 0);
+        rayCasterObject.transform.localPosition = new Vector3(0, assignedWorld.getPlanet().surfaceSettings.radius * 2, 0);
         rayCasterTransform = rayCasterObject.transform;
 
 
@@ -105,7 +105,7 @@ public abstract class Agent : MonoBehaviour
     void SnapToWorld()
     {
         RaycastHit groundHit;
-        if (Physics.Raycast(rayCasterTransform.position, assignedWorld.transform.position - rayCasterTransform.position, out groundHit, assignedWorld.getPlanet().surfaceSettings.radius * 2, floorMask))
+        if (Physics.Raycast(rayCasterTransform.position, assignedWorld.transform.position - rayCasterTransform.position, out groundHit, assignedWorld.getPlanet().surfaceSettings.radius * 3, floorMask))
         {
             Vector3 difference = rootTransform.InverseTransformPoint(groundHit.point);
             rootTransform.Translate(difference);
