@@ -19,6 +19,9 @@ public abstract class Agent : MonoBehaviour
     public World assignedWorld = null;
 
     [System.NonSerialized]
+    public float assignedWorldRadius = 0;
+
+    [System.NonSerialized]
     public Transform rootTransform = null;
 
     [System.NonSerialized]
@@ -58,6 +61,7 @@ public abstract class Agent : MonoBehaviour
     void AssignClosestWorld()
     {
         assignedWorld = Util.getClosestWorld(transform.position);
+        assignedWorldRadius = assignedWorld.getPlanetRadius();
     }
 
     void CreateTransformHierarchy()
@@ -96,7 +100,7 @@ public abstract class Agent : MonoBehaviour
         GameObject rayCasterObject = new GameObject(string.Format("AgentRaycaster_{0}", gameObject.name));
         rayCasterObject.transform.parent = orientationObject.transform;
         rayCasterObject.transform.localEulerAngles = Vector3.zero;
-        rayCasterObject.transform.localPosition = new Vector3(0, assignedWorld.getPlanet().surfaceSettings.radius * 2, 0);
+        rayCasterObject.transform.localPosition = new Vector3(0, assignedWorld.getPlanet().surfaceSettings.radius * 10, 0);
         rayCasterTransform = rayCasterObject.transform;
 
 
@@ -108,7 +112,7 @@ public abstract class Agent : MonoBehaviour
     void SnapToWorld()
     {
         RaycastHit groundHit;
-        if (Physics.Raycast(rayCasterTransform.position, assignedWorld.transform.position - rayCasterTransform.position, out groundHit, assignedWorld.getPlanet().surfaceSettings.radius * 3, floorMask))
+        if (Physics.Raycast(rayCasterTransform.position, assignedWorld.transform.position - rayCasterTransform.position, out groundHit, assignedWorld.getPlanet().surfaceSettings.radius * 11, floorMask))
         {
             Vector3 difference = rootTransform.InverseTransformPoint(groundHit.point);
             rootTransform.Translate(difference);
@@ -146,6 +150,13 @@ public abstract class Agent : MonoBehaviour
         Vector3 rootVector3 = rootTransform.InverseTransformVector(playerMoveVector);
 
         rootTransform.Translate(rootVector3);
+    }
+
+    public void SetOffsetY(float offsetY)
+    {
+        Vector3 offsetLocalPosition = yOffsetTransform.localPosition;
+        offsetLocalPosition.y = offsetY;
+        yOffsetTransform.localPosition = offsetLocalPosition;
     }
 
 #if UNITY_EDITOR
