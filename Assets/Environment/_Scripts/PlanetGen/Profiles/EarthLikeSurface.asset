@@ -14,33 +14,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetMaterial: {fileID: 2100000, guid: 2817cedf07a33d94dbd2d4f5dacf04f5, type: 2}
   radius: 1000
-  heightRange: {x: 0, y: 0.2}
+  heightRange: {x: 0, y: 0.1}
   remapRange: {x: 0, y: 1}
   continents:
   - name: Continents
     enabled: 1
     scale: 0.83
-    smoothness: 1.1
+    smoothness: 3.4
     ratio: 10
   - name: Islands
     enabled: 1
-    scale: 6.53
-    smoothness: 0.72
+    scale: 1.8
+    smoothness: 1.3
     ratio: 1
   detail:
   - name: Large
     enabled: 1
     scale: 2.01
-    smoothness: 0.5
+    smoothness: 1.2
     ratio: 10
   - name: Medium
     enabled: 1
     scale: 3.36
-    smoothness: 0.5
+    smoothness: 1.8
     ratio: 7.34
   - name: Small
     enabled: 1
     scale: 7.42
-    smoothness: 0.59
+    smoothness: 1.7
     ratio: 1
   underwater: []

@@ -1352,9 +1352,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1255.0,
-            "y": 1153.0,
-            "width": 126.00000762939453,
+            "x": -1227.0,
+            "y": 998.0000610351563,
+            "width": 126.0,
             "height": 77.0
         }
     },
@@ -1828,7 +1828,7 @@
             "a": 0.0
         },
         "ctime0": 0,
-        "ctime1": 26214,
+        "ctime1": 17348,
         "ctime2": 49151,
         "ctime3": 65535,
         "ctime4": 0,
@@ -2784,8 +2784,8 @@
     "m_ObjectId": "d2891bcfacd0484a97ee6d3b3aa2c470",
     "m_Title": "Flatness",
     "m_Position": {
-        "x": 10.0,
-        "y": 10.0
+        "x": -1252.0,
+        "y": 939.0000610351563
     }
 }
 

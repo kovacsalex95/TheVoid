@@ -111,7 +111,7 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _ColorStrength: 0.1
+    - _ColorStrength: 0.2
     - _Cull: 2
     - _Cutoff: 0.5
     - _Debug: 0
@@ -158,6 +158,6 @@ Material:
     - _Tiling: {r: 50, g: 50, b: 0, a: 0}
     - _TilingClose: {r: 200, g: 280, b: 0, a: 0}
     - _TilingFar: {r: 6, g: 7, b: 0, a: 0}
-    - _TilingNoise: {r: 5, g: 80, b: 0, a: 0}
+    - _TilingNoise: {r: 10, g: 120, b: 0, a: 0}
     - _TilingRange: {r: 20, g: 8, b: 0, a: 0}
   m_BuildTextureStacks: []
