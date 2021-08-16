@@ -38,7 +38,7 @@ public class SunRotation : MonoBehaviour
         if (advance && dayDuration > 0)
         {
             float dayDurationSeconds = dayDuration * 60f;
-            angle += 360f * (updateInterval / dayDurationSeconds);
+            angle += 360f * (updateInterval / dayDurationSeconds) * Time.timeScale;
         }
 
         Vector3 eulerAngles = this.transform.localEulerAngles;
