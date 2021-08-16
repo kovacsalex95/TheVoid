@@ -1,44 +1,41 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode(), RequireComponent(typeof(RectTransform))]
-public abstract class UIElement : MonoBehaviour
+public abstract class UIElement
 {
-    public UISkin Skin { get; private set; }
+    protected UISkin Skin = null;
 
     static float[] ORIENTATION_PIVOTS = { 0f, 0.5f, 1f };
     static float[] ORIENTATION_ANCHOR_MINMAX = { 0f, 0.5f, 1f };
 
-    RectTransform Transform;
+    public RectTransform Transform { get; private set; }
+
+    public Transform transform => Transform.transform;
 
     HorizontalOrientation hOrientation = HorizontalOrientation.Center;
     VerticalOrientation vOrientation = VerticalOrientation.Center;
-    public HorizontalOrientation HOrientation { get => hOrientation; protected set { hOrientation = value; RefreshTransform(); } }
-    public VerticalOrientation VOrientation { get => vOrientation; protected set { vOrientation = value; RefreshTransform(); } }
+    public HorizontalOrientation HOrientation { get => hOrientation; set { hOrientation = value; RefreshTransform(); } }
+    public VerticalOrientation VOrientation { get => vOrientation; set { vOrientation = value; RefreshTransform(); } }
 
     public Offset Offsets { get; protected set; }
-    public Vector2 Size { get; protected set; }
 
-    public virtual void Awake()
+    public UIElement()
     {
-        Skin = UISkinHelper.Skin;
-
-        Transform = GetComponent<RectTransform>();
+        Skin = UIUtil.Skin;
         Offsets = new Offset(Vector2.zero, Vector2.one * 100);
         Offsets.Changed += OffsetChanged;
-
-        RefreshTransform();
     }
 
-    void OffsetChanged(object sender, EventArgs e)
+    private void OffsetChanged(object sender, EventArgs e)
     {
         RefreshTransform();
     }
 
-    public virtual void RefreshTransform()
+    protected void RefreshTransform()
     {
+        if (Transform == null)
+            return;
+
         Transform.pivot = new Vector2(ORIENTATION_PIVOTS[(int)hOrientation], 1f - ORIENTATION_PIVOTS[(int)vOrientation]);
 
         Vector2 anchorMin = Transform.anchorMin;
@@ -78,6 +75,24 @@ public abstract class UIElement : MonoBehaviour
         Transform.anchorMin = anchorMin;
         Transform.anchorMax = anchorMax;
     }
+
+    protected abstract string ElementName { get; }
+
+    public void Build(Transform parent = null)
+    {
+        GameObject elementObject = new GameObject(ElementName);
+        elementObject.transform.parent = parent;
+        elementObject.transform.localPosition = elementObject.transform.localEulerAngles = Vector3.zero;
+        elementObject.transform.localScale = Vector3.one;
+
+        Transform = elementObject.AddComponent<RectTransform>();
+
+        RefreshTransform();
+
+        CustomComponents(elementObject);
+    }
+
+    protected abstract void CustomComponents(GameObject elementObject);
 }
 public static class RectTransformExtensions
 {
