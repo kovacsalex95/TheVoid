@@ -13,36 +13,34 @@ public class IngameUI : UIBuilder
         Skin = UIUtil.Skin;
 
         UIPanel testPanel = new UIPanel();
-        testPanel.HOrientation = HorizontalOrientation.Left;
-        testPanel.Offsets.Left = testPanel.Offsets.Top = testPanel.Offsets.Bottom = 20;
-        testPanel.Offsets.Width = 0.2f * UIWidth;
+        testPanel.VOrientation = VerticalOrientation.Bottom;
+        testPanel.Offsets.Left = testPanel.Offsets.Right = testPanel.Offsets.Bottom = 20;
+        testPanel.Offsets.Height = 300;
         testPanel.Build(transform);
 
-        UIButton testButton = new UIButton("Test button");
-        testButton.VOrientation = VerticalOrientation.Top;
-        testButton.Offsets.Left = testButton.Offsets.Top = testButton.Offsets.Right = 20;
-        testButton.Offsets.Height = 60;
-        testButton.Build(testPanel.Transform.transform);
-        testButton.TextAlign = HorizontalOrientation.Left;
-        testButton.Clicked += TestButtonClicked1;
+        UIGroupPanel groupPanel = new UIGroupPanel();
+        groupPanel.HOrientation = HorizontalOrientation.Left;
+        groupPanel.Offsets.Left = groupPanel.Offsets.Top = 20;
+        groupPanel.Offsets.Bottom = 340;
+        groupPanel.Offsets.Width = 0.2f * UIWidth;
+        groupPanel.GroupOrientation = GroupOrientation.Vertical;
+        groupPanel.GroupSpacing = 20;
+        groupPanel.Build(transform);
 
-        UIButton testButton2 = new UIButton("Test button 2", Skin.GetIcon("TestIcon"));
-        testButton2.VOrientation = VerticalOrientation.Top;
-        testButton2.Offsets.Left = testButton2.Offsets.Right = 20;
-        testButton2.Offsets.Top = 20 * 2 + 60;
-        testButton2.Offsets.Height = 60;
-        testButton2.Build(testPanel.Transform.transform);
-        testButton2.TextAlign = HorizontalOrientation.Left;
-        testButton2.Clicked += TestButtonClicked2;
+        for (int i = 0; i < 30; i++)
+        {
+            UIButton testButton = new UIButton(i, "Test button " + i.ToString(), Skin.GetIcon("TestIcon"));
+            testButton.VOrientation = VerticalOrientation.Center;
+            testButton.Offsets.Left = testButton.Offsets.Top = testButton.Offsets.Right = 30;
+            testButton.Offsets.Height = 50;
+            testButton.Build(groupPanel.Container);
+            testButton.TextAlign = HorizontalOrientation.Left;
+            testButton.Clicked += ButtonClicked;
+        }
     }
 
-    private void TestButtonClicked1(object sender, EventArgs e)
+    void ButtonClicked(object sender, UIButtonClickedEventArgs e)
     {
-        Debug.Log("Test button clicked");
-    }
-
-    private void TestButtonClicked2(object sender, EventArgs e)
-    {
-        Debug.Log("Test button 2 clicked");
+        Debug.Log("Test button " + e.ID.ToString() + " clicked");
     }
 }
