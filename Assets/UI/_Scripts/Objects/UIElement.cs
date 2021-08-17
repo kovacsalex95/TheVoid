@@ -92,6 +92,22 @@ public abstract class UIElement
         CustomComponents(elementObject);
     }
 
+    public void Show()
+    {
+        if (Transform.gameObject.activeInHierarchy)
+            return;
+
+        Transform.gameObject.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        if (!Transform.gameObject.activeInHierarchy)
+            return;
+
+        Transform.gameObject.SetActive(false);
+    }
+
     protected abstract void CustomComponents(GameObject elementObject);
 }
 public static class RectTransformExtensions
