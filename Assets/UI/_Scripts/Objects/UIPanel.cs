@@ -16,6 +16,8 @@ namespace Assets.UI._Scripts.Objects
         public Sprite BackImage { get => backgroundImage.sprite; set { backgroundImage.sprite = value; } }
         public UnityEngine.UI.Image.Type BackImageType { get => backgroundImage.type; set { backgroundImage.type = value; } }
 
+        public Transform Container = null;
+
         protected override string ElementName => "Panel";
 
         protected override void CustomComponents(GameObject elementObject)
@@ -25,6 +27,8 @@ namespace Assets.UI._Scripts.Objects
             backgroundImage.sprite = Skin.Panel.BackgroundImage;
             backgroundImage.type = Skin.Panel.BackgroundSlicing;
             backgroundImage.raycastTarget = false;
+
+            Container = transform;
         }
     }
 }
