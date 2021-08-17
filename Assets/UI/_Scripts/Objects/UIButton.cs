@@ -11,17 +11,19 @@ namespace Assets.UI._Scripts.Objects
 {
     class UIButton : UIElement
     {
-        string buttonText;
+        public int ID { get; private set; }
+        string buttonLabel;
         Sprite buttonIcon = null;
         UILabel label;
         UIImage iconImage;
         AdvancedButton button;
 
-        public EventHandler Clicked;
+        public EventHandler<UIButtonClickedEventArgs> Clicked;
 
-        public UIButton(string text, Sprite icon = null)
+        public UIButton(int id, string label, Sprite icon = null)
         {
-            buttonText = text;
+            ID = id;
+            buttonLabel = label;
             buttonIcon = icon;
         }
 
@@ -64,7 +66,7 @@ namespace Assets.UI._Scripts.Objects
             button.StateChanged += ButtonStateChanged;
 
             // Button label (TMPro) component
-            label = new UILabel(buttonText);
+            label = new UILabel(buttonLabel);
             label.HOrientation = Skin.Button.TextAlign;
             label.VOrientation = VerticalOrientation.Center;
             label.Offsets.Top = 0;
@@ -89,12 +91,14 @@ namespace Assets.UI._Scripts.Objects
             }
         }
 
+        
+
         private void ButtonClick()
         {
             EventSystem.current.SetSelectedGameObject(null);
 
             if (Clicked != null)
-                Clicked.Invoke(this as UIButton, new EventArgs());
+                Clicked.Invoke(this, new UIButtonClickedEventArgs(ID, buttonLabel));
         }
 
         private void ButtonStateChanged(object sender, EventArgs e)
@@ -107,6 +111,18 @@ namespace Assets.UI._Scripts.Objects
                 label.Color = Skin.Button.DisabledTextColor;
             else
                 label.Color = Skin.Button.TextColor;
+        }
+    }
+
+    class UIButtonClickedEventArgs : EventArgs
+    {
+        public int ID;
+        public string Label;
+
+        public UIButtonClickedEventArgs(int ID, string Label)
+        {
+            this.ID = ID;
+            this.Label = Label;
         }
     }
 }
