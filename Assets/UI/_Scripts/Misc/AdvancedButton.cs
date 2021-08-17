@@ -54,6 +54,8 @@ namespace Assets.UI._Scripts.Misc
 
         public override void OnPointerExit(PointerEventData eventData)
         {
+            EventSystem.current.SetSelectedGameObject(null);
+
             base.OnPointerExit(eventData);
             UpdateState();
         }
