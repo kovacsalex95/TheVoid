@@ -1,3 +1,4 @@
+using Assets.UI._Scripts.Misc;
 using System;
 using UnityEngine;
 
@@ -19,11 +20,16 @@ public abstract class UIElement
 
     public Offset Offsets { get; protected set; }
 
+    private int pointerIndex;
+
+    public bool MouseInteraction = false;
+
     public UIElement()
     {
         Skin = UIUtil.Skin;
         Offsets = new Offset(Vector2.zero, Vector2.one * 100);
         Offsets.Changed += OffsetChanged;
+        pointerIndex = UIUtil.Pointers.RegisterElement(this);
     }
 
     private void OffsetChanged(object sender, EventArgs e)
@@ -90,6 +96,12 @@ public abstract class UIElement
         RefreshTransform();
 
         CustomComponents(elementObject);
+    }
+
+    public void Delete()
+    {
+        UIUtil.Pointers.DeleteElement(pointerIndex);
+        GameObject.DestroyImmediate(Transform.gameObject);
     }
 
     public void Show()
