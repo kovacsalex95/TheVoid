@@ -9,6 +9,7 @@ public class UISkin : MonoBehaviour
     public ImageSkin Panel;
     public ButtonSkin Button;
     public GroupPanelSkin GroupPanel;
+    public ScrollbarSkin Scrollbar;
 
     Dictionary<string, Sprite> iconsDict = null;
     public Sprite GetIcon(string iconName)
@@ -63,6 +64,18 @@ public class ButtonSkin : ImageSkin
     public float FadeDuration = 0.1f;
     [Range(0f, 1f)]
     public float Gaps = 0.1f;
+}
+
+[System.Serializable]
+public class ScrollbarSkin
+{
+    public Color NormalColor = Color.black;
+    public Color HoverColor = Color.black;
+    public Color PressedColor = Color.black;
+    public Color DisabledColor = Color.black;
+    public float FadeDuration = 0.1f;
+    public Sprite HandleImage;
+    public Image.Type HandleSlicing;
 }
 
 [System.Serializable]
