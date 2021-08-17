@@ -1,4 +1,5 @@
 using Assets.Misc._Scripts;
+using Assets.UI._Scripts.Misc;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -88,8 +89,17 @@ public class CameraAgent : Agent
 
     private void UpdateInput()
     {
-        mouseRight = controller.input.actions["Mouse Right Button"].ReadValue<float>() != 0;
-        mouseDelta = controller.input.actions["Mouse Movement"].ReadValue<Vector2>();
-        mouseScroll = -CalcUtil.Normalize(controller.input.actions["Mouse Scroll"].ReadValue<float>());
+        if (!UIUtil.Pointers.MouseOverUI)
+        {
+            mouseRight = controller.input.actions["Mouse Right Button"].ReadValue<float>() != 0;
+            mouseDelta = controller.input.actions["Mouse Movement"].ReadValue<Vector2>();
+            mouseScroll = -CalcUtil.Normalize(controller.input.actions["Mouse Scroll"].ReadValue<float>());
+        }
+        else
+        {
+            mouseRight = false;
+            mouseDelta = Vector2.zero;
+            mouseScroll = 0;
+        }
     }
 }
