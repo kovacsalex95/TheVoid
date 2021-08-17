@@ -1,3 +1,4 @@
+using Assets.UI._Scripts.Misc;
 using Assets.UI._Scripts.Objects;
 using System;
 using System.Collections;
@@ -16,6 +17,7 @@ public class IngameUI : UIBuilder
         testPanel.VOrientation = VerticalOrientation.Bottom;
         testPanel.Offsets.Left = testPanel.Offsets.Right = testPanel.Offsets.Bottom = 20;
         testPanel.Offsets.Height = 300;
+        testPanel.MouseInteraction = true;
         testPanel.Build(transform);
 
         UIGroupPanel groupPanel = new UIGroupPanel();
@@ -23,8 +25,9 @@ public class IngameUI : UIBuilder
         groupPanel.Offsets.Left = groupPanel.Offsets.Top = 20;
         groupPanel.Offsets.Bottom = 340;
         groupPanel.Offsets.Width = 0.2f * UIWidth;
-        groupPanel.GroupOrientation = GroupOrientation.Vertical;
-        groupPanel.GroupSpacing = 20;
+        groupPanel.Orientation = GroupOrientation.Vertical;
+        groupPanel.Spacing = 20;
+        groupPanel.MouseInteraction = true;
         groupPanel.Build(transform);
 
         for (int i = 0; i < 30; i++)
