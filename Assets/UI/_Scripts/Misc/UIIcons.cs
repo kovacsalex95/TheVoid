@@ -36,7 +36,6 @@ namespace Assets.UI._Scripts.Misc
             }
 
             textField.text = text;
-            textField.ForceMeshUpdate(true, true);
         }
 
         public static void UpdateAllTMText()
