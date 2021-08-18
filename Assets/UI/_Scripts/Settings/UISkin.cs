@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class UISkin : MonoBehaviour
 {
+    public TMPro.TMP_FontAsset DefaultFonts;
+    public TMPro.TMP_FontAsset EmojiFonts;
     public ImageIcon[] icons;
     public ImageSkin Panel;
     public ButtonSkin Button;

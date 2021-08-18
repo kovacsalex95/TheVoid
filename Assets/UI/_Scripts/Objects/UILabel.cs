@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.UI._Scripts.Misc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Assets.UI._Scripts.Objects
             labelText = text;
         }
 
-        public string Text { get => labelComponent.text; set { labelComponent.SetText(value);  } }
+        public string Text { get => labelComponent.text; set { labelComponent.SetText(value); UIIcons.UpdateTMText(labelComponent);  } }
         public Color Color { get => labelComponent.color; set { labelComponent.color = value; } }
         public HorizontalOrientation TextAlignH
         {

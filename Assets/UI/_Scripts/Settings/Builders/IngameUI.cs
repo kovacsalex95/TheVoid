@@ -32,7 +32,7 @@ public class IngameUI : UIBuilder
 
         for (int i = 0; i < 30; i++)
         {
-            UIButton testButton = new UIButton(i, "Test button " + i.ToString(), Skin.GetIcon("TestIcon"));
+            UIButton testButton = new UIButton(i, "[" + UIIcons.IconNames[i] + "] Test button " + i.ToString(), Skin.GetIcon("TestIcon")); ;
             testButton.VOrientation = VerticalOrientation.Center;
             testButton.Offsets.Left = testButton.Offsets.Top = testButton.Offsets.Right = 30;
             testButton.Offsets.Height = 50;

@@ -1,3 +1,4 @@
+using Assets.UI._Scripts.Misc;
 using Assets.UI._Scripts.Objects;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ public abstract class UIBuilder : MonoBehaviour
     {
         canvas = GetComponent<Canvas>();
         scaler = GetComponent<CanvasScaler>();
+
+        UIIcons.UpdateAllTMText();
 
         BuildUI();
     }
