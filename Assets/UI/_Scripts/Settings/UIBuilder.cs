@@ -18,7 +18,7 @@ public abstract class UIBuilder : MonoBehaviour
         canvas = GetComponent<Canvas>();
         scaler = GetComponent<CanvasScaler>();
 
-        UIIcons.UpdateAllTMText();
+        UIIcons.UpdateAllTextIcons();
 
         BuildUI();
     }
