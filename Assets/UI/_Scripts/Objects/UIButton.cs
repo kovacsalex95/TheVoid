@@ -13,25 +13,32 @@ namespace Assets.UI._Scripts.Objects
     {
         public int ID { get; private set; }
         string buttonLabel;
-        Sprite buttonIcon = null;
+        UIButtonIcon buttonIcon;
         UILabel label;
         UIImage iconImage;
+        UILabel iconIcon;
         AdvancedButton button;
 
-        public EventHandler<UIButtonClickedEventArgs> Clicked;
+        public EventHandler<ClickedEventArgs> Clicked;
 
-        public UIButton(int id, string label, Sprite icon = null)
+        public UIButton(int id, string label, Sprite image = null)
         {
             ID = id;
             buttonLabel = label;
-            buttonIcon = icon;
+            buttonIcon = new UIButtonIcon(image);
+        }
+        public UIButton(int id, string label, string icon = null)
+        {
+            ID = id;
+            buttonLabel = label;
+            buttonIcon = new UIButtonIcon(icon);
         }
 
         public bool HasIcon => buttonIcon != null;
 
         public string Text { get => label.Text; set { label.Text = value; } }
 
-        public Sprite Icon { get => iconImage.Image; set { iconImage.Image = value; } }
+
 
         public HorizontalOrientation TextAlign { get => label.TextAlignH; set { label.TextAlignH = value; } }
 
@@ -79,15 +86,39 @@ namespace Assets.UI._Scripts.Objects
             label.TextAlignH = Skin.Button.TextAlign;
             label.TextAlignV = VerticalOrientation.Center;
 
-            // Button image component
-            if (buttonIcon != null)
+            // Button icon component
+            if (buttonIcon != null && buttonIcon.Type != UIButtonIcon.UIButtonIconType.None)
             {
-                iconImage = new UIImage(buttonIcon);
-                iconImage.HOrientation = Skin.Button.IconAlign;
-                iconImage.VOrientation = VerticalOrientation.Center;
-                iconImage.Offsets.Top = iconImage.Offsets.Bottom = iconImage.Offsets.Left = iconMargin;
-                iconImage.Offsets.Width = iconSize;
-                iconImage.Build(transform);
+                if (buttonIcon.Type == UIButtonIcon.UIButtonIconType.Image)
+                {
+                    iconImage = new UIImage(buttonIcon.Image);
+                    iconImage.HOrientation = Skin.Button.IconAlign;
+                    iconImage.VOrientation = VerticalOrientation.Center;
+                    iconImage.Offsets.Top = iconImage.Offsets.Bottom = iconMargin;
+                    if (Skin.Button.IconAlign == HorizontalOrientation.Left)
+                        iconImage.Offsets.Left = iconMargin;
+                    else
+                        iconImage.Offsets.Right = iconMargin;
+                    iconImage.Offsets.Width = iconSize;
+                    iconImage.Build(transform);
+                }
+                else
+                {
+                    iconIcon = new UILabel(buttonIcon.Icon);
+                    iconIcon.HOrientation = Skin.Button.IconAlign;
+                    iconIcon.VOrientation = VerticalOrientation.Center;
+                    iconIcon.Offsets.Top = iconIcon.Offsets.Bottom = iconMargin;
+                    if (Skin.Button.IconAlign == HorizontalOrientation.Left)
+                        iconIcon.Offsets.Left = iconMargin;
+                    else
+                        iconIcon.Offsets.Right = iconMargin;
+                    iconIcon.Offsets.Width = iconSize;
+                    iconIcon.Build(transform);
+                    iconIcon.TextAlignH = HorizontalOrientation.Center;
+                    iconIcon.TextAlignV = VerticalOrientation.Center;
+                    iconIcon.FontSize = iconIcon.FontSize * 0.8f;
+                    iconIcon.Color = Skin.Button.TextColor;
+                }
             }
         }
 
@@ -98,7 +129,7 @@ namespace Assets.UI._Scripts.Objects
             EventSystem.current.SetSelectedGameObject(null);
 
             if (Clicked != null)
-                Clicked.Invoke(this, new UIButtonClickedEventArgs(ID, buttonLabel));
+                Clicked.Invoke(this, new ClickedEventArgs(ID, buttonLabel));
         }
 
         private void ButtonStateChanged(object sender, EventArgs e)
@@ -111,18 +142,77 @@ namespace Assets.UI._Scripts.Objects
                 label.Color = Skin.Button.DisabledTextColor;
             else
                 label.Color = Skin.Button.TextColor;
+
+            if (iconIcon != null)
+                iconIcon.Color = label.Color;
         }
-    }
 
-    class UIButtonClickedEventArgs : EventArgs
-    {
-        public int ID;
-        public string Label;
-
-        public UIButtonClickedEventArgs(int ID, string Label)
+        public class ClickedEventArgs : EventArgs
         {
-            this.ID = ID;
-            this.Label = Label;
+            public int ID;
+            public string Label;
+
+            public ClickedEventArgs(int ID, string Label)
+            {
+                this.ID = ID;
+                this.Label = Label;
+            }
+        }
+
+        public class UIButtonIcon
+        {
+            public enum UIButtonIconType
+            {
+                None = 0,
+                Image = 1,
+                Icon = 2
+            }
+
+            public Sprite image = null;
+            public string icon = null;
+
+            public UIButtonIcon(Sprite image)
+            {
+                this.image = image;
+                this.icon = null;
+            }
+            public UIButtonIcon(string icon)
+            {
+                this.icon = icon;
+                this.image = null;
+            }
+
+            public Sprite Image
+            {
+                get => image;
+                set
+                {
+                    image = value;
+                    icon = null;
+                }
+            }
+
+            public string Icon
+            {
+                get => icon;
+                set
+                {
+                    icon = value;
+                    image = null;
+                }
+            }
+
+            public UIButtonIconType Type
+            {
+                get
+                {
+                    if (image == null && icon == null)
+                        return UIButtonIconType.None;
+                    if (image == null)
+                        return UIButtonIconType.Icon;
+                    return UIButtonIconType.Image;
+                }
+            }
         }
     }
 }
