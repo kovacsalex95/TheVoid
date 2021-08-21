@@ -42,12 +42,12 @@ namespace Assets.UI._Scripts.Objects
 
         public HorizontalOrientation TextAlign { get => label.TextAlignH; set { label.TextAlignH = value; } }
 
-        protected override string ElementName => "Button";
+        public override string ElementName => "Button";
 
         protected override void CustomComponents(GameObject elementObject)
         {
             float iconMargin = Skin.Button.Gaps * Transform.sizeDelta.y;
-            float iconSize = Transform.sizeDelta.y - iconMargin * 2;
+            float iconSize = Transform.sizeDelta.y - iconMargin;
 
             // Image component
             UnityEngine.UI.Image backgroundImage = elementObject.AddComponent<UnityEngine.UI.Image>();
@@ -78,8 +78,8 @@ namespace Assets.UI._Scripts.Objects
             label.VOrientation = VerticalOrientation.Center;
             label.Offsets.Top = 0;
             label.Offsets.Bottom = 0;
-            label.Offsets.Left = HasIcon && Skin.Button.IconAlign == HorizontalOrientation.Left ? Transform.sizeDelta.y : iconMargin;
-            label.Offsets.Right = HasIcon && Skin.Button.IconAlign == HorizontalOrientation.Right ? Transform.sizeDelta.y : iconMargin;
+            label.Offsets.Left = HasIcon && Skin.Button.IconAlign == HorizontalOrientation.Left ? Transform.sizeDelta.y + iconMargin : iconMargin;
+            label.Offsets.Right = HasIcon && Skin.Button.IconAlign == HorizontalOrientation.Right ? Transform.sizeDelta.y + iconMargin : iconMargin;
             label.Build(transform);
 
             label.Color = Skin.Button.TextColor;
@@ -96,9 +96,9 @@ namespace Assets.UI._Scripts.Objects
                     iconImage.VOrientation = VerticalOrientation.Center;
                     iconImage.Offsets.Top = iconImage.Offsets.Bottom = iconMargin;
                     if (Skin.Button.IconAlign == HorizontalOrientation.Left)
-                        iconImage.Offsets.Left = iconMargin;
+                        iconImage.Offsets.Left = iconMargin * 2;
                     else
-                        iconImage.Offsets.Right = iconMargin;
+                        iconImage.Offsets.Right = iconMargin * 2;
                     iconImage.Offsets.Width = iconSize;
                     iconImage.Build(transform);
                 }
@@ -109,14 +109,14 @@ namespace Assets.UI._Scripts.Objects
                     iconIcon.VOrientation = VerticalOrientation.Center;
                     iconIcon.Offsets.Top = iconIcon.Offsets.Bottom = iconMargin;
                     if (Skin.Button.IconAlign == HorizontalOrientation.Left)
-                        iconIcon.Offsets.Left = iconMargin;
+                        iconIcon.Offsets.Left = iconMargin * 2;
                     else
-                        iconIcon.Offsets.Right = iconMargin;
+                        iconIcon.Offsets.Right = iconMargin * 2;
                     iconIcon.Offsets.Width = iconSize;
                     iconIcon.Build(transform);
                     iconIcon.TextAlignH = HorizontalOrientation.Center;
                     iconIcon.TextAlignV = VerticalOrientation.Center;
-                    iconIcon.FontSize = iconIcon.FontSize * 0.8f;
+                    iconIcon.FontSize = Skin.IconSize;
                     iconIcon.Color = Skin.Button.TextColor;
                 }
             }
