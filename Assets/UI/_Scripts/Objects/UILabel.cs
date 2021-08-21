@@ -18,8 +18,10 @@ namespace Assets.UI._Scripts.Objects
             labelText = text;
         }
 
-        public string Text { get => labelComponent.text; set { labelComponent.SetText(value); UIIcons.UpdateTMText(labelComponent);  } }
+        public string Text { get => labelComponent.text; set { labelComponent.SetText(value); labelComponent.UpdateIcons();  } }
         public Color Color { get => labelComponent.color; set { labelComponent.color = value; } }
+        public float FontSize { get => labelComponent.fontSize; set { labelComponent.fontSize = value; } }
+
         public HorizontalOrientation TextAlignH
         {
             get
