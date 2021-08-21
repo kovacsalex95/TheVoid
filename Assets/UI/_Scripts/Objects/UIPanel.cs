@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Assets.UI._Scripts.Objects
 {
-    class UIPanel : UIElement
+    public class UIPanel : UIElement
     {
         UnityEngine.UI.Image backgroundImage;
 
@@ -18,7 +18,7 @@ namespace Assets.UI._Scripts.Objects
 
         public Transform Container = null;
 
-        protected override string ElementName => "Panel";
+        public override string ElementName => "Panel";
 
         protected override void CustomComponents(GameObject elementObject)
         {

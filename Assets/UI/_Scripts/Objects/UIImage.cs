@@ -22,7 +22,7 @@ namespace Assets.UI._Scripts.Objects
         public Sprite Image { get => imageComponent.sprite; set { imageComponent.sprite = value; } }
         public UnityEngine.UI.Image.Type ImageType { get => imageComponent.type; set { imageComponent.type = value; } }
 
-        protected override string ElementName => "Image";
+        public override string ElementName => "Image";
 
         protected override void CustomComponents(GameObject elementObject)
         {

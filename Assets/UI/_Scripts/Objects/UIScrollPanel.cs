@@ -10,7 +10,7 @@ namespace Assets.UI._Scripts.Objects
 
         ScrollRect scrollArea;
 
-        protected override string ElementName => "GroupPanel";
+        public override string ElementName => "GroupPanel";
 
         protected override void CustomComponents(GameObject elementObject)
         {

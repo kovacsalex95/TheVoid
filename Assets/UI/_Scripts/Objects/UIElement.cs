@@ -82,7 +82,7 @@ public abstract class UIElement
         Transform.anchorMax = anchorMax;
     }
 
-    protected abstract string ElementName { get; }
+    public abstract string ElementName { get; }
 
     public void Build(Transform parent = null)
     {

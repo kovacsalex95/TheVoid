@@ -71,12 +71,13 @@ namespace Assets.UI._Scripts.Objects
             }
         }
 
-        protected override string ElementName => "Label";
+        public override string ElementName => "Label";
 
         protected override void CustomComponents(GameObject elementObject)
         {
             labelComponent = elementObject.AddComponent<TMPro.TextMeshProUGUI>();
             Text = labelText;
+            FontSize = Skin.FontSize;
         }
     }
 }
