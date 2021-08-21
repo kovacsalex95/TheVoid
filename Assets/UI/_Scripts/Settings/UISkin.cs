@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class UISkin : MonoBehaviour
 {
+    public float FontSize = 20f;
+    public float IconSize = 26f;
+
     public ImageIcon[] icons;
     public ImageSkin Panel;
     public ButtonSkin Button;
