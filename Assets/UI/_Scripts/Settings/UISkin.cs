@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class UISkin : MonoBehaviour
 {
-    public TMPro.TMP_FontAsset DefaultFonts;
-    public TMPro.TMP_FontAsset EmojiFonts;
     public ImageIcon[] icons;
     public ImageSkin Panel;
     public ButtonSkin Button;
@@ -28,11 +26,6 @@ public class UISkin : MonoBehaviour
             return iconsDict[iconName];
 
         return null;
-    }
-
-    private void Awake()
-    {
-        
     }
 }
 
