@@ -91,7 +91,9 @@ namespace lxkvcs.PlanetGen
                 {
                     int i = x + y * colliderResolution;
 
-                    Vector2 percent = new Vector2(x, y) / (colliderResolution - 1);
+                    Vector2 percent = SpherizeVector(new Vector2(x, y) / (colliderResolution - 1));
+
+
                     Vector3 pointOnUnitCube = localUp + (percent.x - .5f) * 2 * axisA + (percent.y - .5f) * 2 * axisB;
 
                     Vector3 dataRaw = terrainData[i];
@@ -158,7 +160,8 @@ namespace lxkvcs.PlanetGen
                 {
                     int i = y * textureSize + x;
 
-                    percent = new Vector2(x, y) / (textureSize - 1);
+                    percent = SpherizeVector(new Vector2(x, y) / (textureSize - 1));
+
 
                     pointOnUnitCube = Planet.directions[faceIndex] + (percent.x - .5f) * 2 * axisA + (percent.y - .5f) * 2 * axisB;
 
@@ -167,6 +170,22 @@ namespace lxkvcs.PlanetGen
             }
 
             return vertices;
+        }
+
+        Vector2 SpherizeVector(Vector2 source)
+        {
+            float x = source.x;
+            float y = source.y;
+
+            float sinX = (Mathf.Sin(Mathf.Deg2Rad * (x-0.5f) * 180)+1) / 2;
+            float sinY = (Mathf.Sin(Mathf.Deg2Rad * (y-0.5f) * 180)+1) / 2;
+
+            x = x + (x - sinX);
+            y = y + (y - sinY);
+
+            Vector2 spherizedPoint = new Vector2(x, y);
+
+            return Vector2.Lerp(spherizedPoint, source, 0.5f);
         }
     }
 }
