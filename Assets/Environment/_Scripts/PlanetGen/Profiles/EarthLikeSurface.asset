@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EarthLikeSurface
   m_EditorClassIdentifier: 
   planetMaterial: {fileID: 2100000, guid: 2817cedf07a33d94dbd2d4f5dacf04f5, type: 2}
-  radius: 1000
+  radius: 2000
   heightRange: {x: 0, y: 0.1}
   remapRange: {x: 0, y: 1}
   continents:
