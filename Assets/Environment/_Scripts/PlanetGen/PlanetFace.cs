@@ -174,11 +174,13 @@ namespace lxkvcs.PlanetGen
 
         Vector2 SpherizeVector(Vector2 source)
         {
+            // https://www.desmos.com/calculator/0ysgntuaov
+
             float x = source.x;
             float y = source.y;
 
-            float sinX = (Mathf.Sin(Mathf.Deg2Rad * (x-0.5f) * 180)+1) / 2;
-            float sinY = (Mathf.Sin(Mathf.Deg2Rad * (y-0.5f) * 180)+1) / 2;
+            float sinX = (Mathf.Sin(Mathf.Deg2Rad * (x - 0.5f) * 180) + 1) / 2;
+            float sinY = (Mathf.Sin(Mathf.Deg2Rad * (y - 0.5f) * 180) + 1) / 2;
 
             x = x + (x - sinX);
             y = y + (y - sinY);
