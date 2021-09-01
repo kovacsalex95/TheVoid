@@ -1,5 +1,4 @@
 #pragma kernel GenerateData
-#pragma kernel CalculateSteepness
 #include "SimplexNoise.compute"
 
 struct PlanetLayerStruct
@@ -69,67 +68,4 @@ void GenerateData(uint3 id : SV_DispatchThreadID)
     int colorIndex = id.y * TextureSize + id.x;
 
     Colors[colorIndex] = float3(sampleR, sampleG, sampleB);
-}
-
-
-float linearDiff(float height1, float height2) {
-    float diff = abs(height1 - height2) / 280;
-    return atan(diff) * degrees(45) + 0.5;
-}
-
-
-float diagonalDiff(float height1, float height2) {
-    float diff = lerp(height1, height2, 0.70) / 5500;
-    return atan(diff) * degrees(45) + 0.5;
-}
-
-float biggest(float value1, float value2, float value3) {
-    float v1 = clamp(value1, 0, 1);
-    float v2 = clamp(value2, 0, 1);
-    float v3 = clamp(value3, 0, 1);
-
-    float result = v1;
-    if (v2 > result)
-        result = v2;
-    if (v3 > result)
-        result = v3;
-
-    return result;
-}
-
-float midp(float value1, float value2, float value3) {
-    float v1 = clamp(value1, 0, 1);
-    float v2 = clamp(value2, 0, 1);
-    float v3 = clamp(value3, 0, 1);
-
-    return (v1 + v2 + v3) / 3;
-}
-
-
-[numthreads(8, 8, 1)]
-void CalculateSteepness(uint3 id : SV_DispatchThreadID) {
-
-    float steepness = 0;
-    int colorIndex = id.y * TextureSize + id.x;
-
-    float height = Colors[colorIndex].x;
-
-    if (id.x < TextureSize - 1 && id.y < TextureSize - 1) {
-        int colorIndexRight = id.y * TextureSize + (id.x + 1);
-        int colorIndexDown = (id.y + 1) * TextureSize + id.x;
-        int colorIndexDiagonal = (id.y + 1) * TextureSize + (id.x + 1);
-        float heightRight = Colors[colorIndexRight].x;
-        float heightDown = Colors[colorIndexDown].x;
-        float heightDiagonal = Colors[colorIndexDiagonal].x;
-
-        float diffRight = linearDiff(height, heightRight);
-        float diffDown = linearDiff(height, heightDown);
-        float diffDiagonal = diagonalDiff(height, heightDiagonal);
-
-        steepness = biggest(diffRight, diffDown, diffDiagonal);
-        steepness -= 0.5;
-        steepness = abs(steepness) * 2;
-    }
-
-    Colors[colorIndex] = float3(height, 1 - steepness, 0);
 }
