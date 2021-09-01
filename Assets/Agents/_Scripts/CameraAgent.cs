@@ -91,7 +91,7 @@ public class CameraAgent : Agent
     {
         if (!UIUtil.Pointers.MouseOverUI)
         {
-            mouseRight = controller.input.actions["Mouse Right Button"].ReadValue<float>() != 0;
+            mouseRight = controller.input.actions["Mouse Middle Button"].ReadValue<float>() != 0;
             mouseDelta = controller.input.actions["Mouse Movement"].ReadValue<Vector2>();
             mouseScroll = -CalcUtil.Normalize(controller.input.actions["Mouse Scroll"].ReadValue<float>());
         }
