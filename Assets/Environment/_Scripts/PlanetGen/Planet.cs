@@ -172,6 +172,8 @@ namespace lxkvcs.PlanetGen
 
         public void OnDrawGizmosSelected()
         {
+            return;
+
             int drawPoints = 5000;
 
             if (false)
