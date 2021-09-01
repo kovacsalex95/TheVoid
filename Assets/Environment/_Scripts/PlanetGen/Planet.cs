@@ -13,7 +13,7 @@ namespace lxkvcs.PlanetGen
             -   Steepness map
 
     */
-
+    [ExecuteInEditMode()]
     public class Planet : MonoBehaviour
     {
         [System.NonSerialized]
@@ -68,6 +68,9 @@ namespace lxkvcs.PlanetGen
             return gameObject.GetComponentsInChildren<PlanetFace>();
         }
         PlanetFace[] faces = null;
+
+        [SerializeField, HideInInspector]
+        List<ControlPoint> controlPoints = new List<ControlPoint>();
 
 
 
@@ -158,6 +161,44 @@ namespace lxkvcs.PlanetGen
             faces = GetFaces();
 
             GenerateTerrainFaces();
+
+            controlPoints.Clear();
+
+            foreach (PlanetFace face in faces)
+                controlPoints.AddRange(face.controlPoints);
+
+            Debug.Log($"Control points: {controlPoints.Count}");
+        }
+
+        public void OnDrawGizmosSelected()
+        {
+            int drawPoints = 5000;
+
+            if (false)
+            {
+                int stepSize = Mathf.FloorToInt((float)controlPoints.Count / (float)drawPoints);
+
+                for (int i = 0; i < controlPoints.Count; i += stepSize)
+                {
+                    Gizmos.color = Assets.UI._Scripts.Misc.UIUtil.ColorLerp(Color.red, Color.green, controlPoints[i].flatness);
+                    Gizmos.DrawSphere(controlPoints[i].point, 8);
+                }
+            }
+            else
+            {
+                int i = 0;
+
+                foreach (ControlPoint cPoint in controlPoints)
+                {
+                    if (i >= drawPoints)
+                        break;
+
+                    i++;
+
+                    Gizmos.color = Assets.UI._Scripts.Misc.UIUtil.ColorLerp(Color.red, Color.green, cPoint.flatness);
+                    Gizmos.DrawSphere(cPoint.point, 4);
+                }
+            }
         }
 
         void PreviewEnable()
@@ -345,50 +386,8 @@ namespace lxkvcs.PlanetGen
             continentLayersBuffer.Dispose();
             detailLayersBuffer.Dispose();
 
-            // Generate steepness data
-            GenerateTerrainSteepness(faceIndex, terrainPixels);
-        }
-
-        void GenerateTerrainSteepness(int faceIndex, Vector3[] pixels)
-        {
-            PlanetFace face = faces[faceIndex];
-
-            int textureSize = previewScale((int)faceResolution);
-
-            // Pixel buffer
-            ComputeBuffer colorsBuffer = new ComputeBuffer(pixels.Length, sizeof(float) * 3);
-            colorsBuffer.SetData(pixels);
-
-            // Add buffers
-            int kernelIndex = planetDataShader.FindKernel("CalculateSteepness");
-
-            planetDataShader.SetBuffer(kernelIndex, "Colors", colorsBuffer);
-            planetDataShader.SetFloat("TextureSize", textureSize);
-
-            // Dispatch
-            planetDataShader.Dispatch(kernelIndex, textureSize / 8, textureSize / 8, 1);
-
-            colorsBuffer.GetData(pixels);
-
-            // Dispose
-            colorsBuffer.Dispose();
-
-            // Full the holes
-            for (int i=0; i < pixels.Length; i++)
-            {
-                int y = Mathf.FloorToInt((float)i / (float)textureSize);
-                int x = i - y * textureSize;
-
-                if (x == textureSize - 1 && y == textureSize - 1)
-                    pixels[i].y = pixels[i - textureSize - 1].y;
-                else if (x == textureSize - 1)
-                    pixels[i].y = pixels[i - 1].y;
-                else if (y == textureSize - 1)
-                    pixels[i].y = pixels[i - textureSize].y;
-            }
-
-            // Construct mesh
-            face.ConstructMesh(faceIndex, pixels, surfaceSettings.heightRange, previewMode);
+            // Contruct mesh
+            face.ConstructMesh(faceIndex, terrainPixels, surfaceSettings.heightRange, previewMode);
         }
     }
 
@@ -405,5 +404,27 @@ namespace lxkvcs.PlanetGen
         _1024x1024 = 1024,
         _2048x2048 = 2048,
         _4096x4096 = 4096,
+    }
+
+    [System.Serializable]
+    public struct ControlPoint
+    {
+        public Vector3 point;
+        public Vector3 normal;
+        public float flatness;
+
+        public ControlPoint(Vector3 a, Vector3 b, Vector3 c, Vector3 worldCenter)
+        {
+            this.point = (a + c) / 2;
+
+            Vector3 side1 = b - a;
+            Vector3 side2 = c - a;
+
+            this.normal = Vector3.Cross(side1, side2).normalized;
+
+            Vector3 worldDifference = (this.point - worldCenter).normalized;
+            this.flatness = Mathf.Clamp01(Vector3.Dot(this.normal, worldDifference));
+            this.flatness = Mathf.Max(0, flatness - 0.95f) * 20;
+        }
     }
 }

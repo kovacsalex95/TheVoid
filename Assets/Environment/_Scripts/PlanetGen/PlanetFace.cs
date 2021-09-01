@@ -34,6 +34,9 @@ namespace lxkvcs.PlanetGen
         [SerializeField, HideInInspector]
         public Vector3[] dataVertices = null;
 
+        [SerializeField, HideInInspector]
+        public ControlPoint[] controlPoints = null;
+
 
         Planet _planet = null;
         Planet planet
@@ -74,8 +77,7 @@ namespace lxkvcs.PlanetGen
 
         public void ConstructMesh(int faceIndex, Vector3[] terrainData, Vector2 heightRange, bool previewMode)
         {
-            Mesh faceMesh = new Mesh();
-            faceMesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+            Mesh faceMesh = new Mesh { indexFormat = UnityEngine.Rendering.IndexFormat.UInt32 };
             int colliderResolution = faceResolution;
 
             Vector3[] vertices = new Vector3[colliderResolution * colliderResolution];
@@ -123,24 +125,53 @@ namespace lxkvcs.PlanetGen
                 }
             }
 
+            List<ControlPoint> controlPoints = new List<ControlPoint>();
+
+            for (int x = 1; x < colliderResolution; x++)
+            {
+                for (int y = 1; y < colliderResolution; y++)
+                {
+                    int topLeftIndex = (x - 1) + (y - 1) * colliderResolution;
+                    int topRightIndex = x + (y - 1) * colliderResolution;
+                    int bottomRightIndex = x + y * colliderResolution;
+
+                    Vector3 topLeftVertice = vertices[topLeftIndex];
+                    Vector3 topRightVertice = vertices[topRightIndex];
+                    Vector3 bottomRightVertice = vertices[bottomRightIndex];
+
+                    ControlPoint controlPoint = new ControlPoint(topLeftVertice, topRightVertice, bottomRightVertice, transform.position);
+
+                    if (x % 2 == 0 && y % 2 == 0)
+                        controlPoints.Add(controlPoint);
+
+                    colors[bottomRightIndex].g = controlPoint.flatness;
+                }
+            }
+
+            // Fill the holes
+            for (int i = 0; i < colors.Length; i++)
+            {
+                int y = Mathf.FloorToInt((float)i / (float)colliderResolution);
+                int x = i - y * colliderResolution;
+
+                if (x == 0 && y == 0)
+                    colors[i].g = colors[i + colliderResolution + 1].g;
+                else if (x == 0)
+                    colors[i].g = colors[i + 1].g;
+                else if (y == 0)
+                    colors[i].g = colors[i + colliderResolution].g;
+            }
+
+            this.controlPoints = controlPoints.ToArray();
+
             faceMesh.vertices = vertices;
             faceMesh.triangles = triangles;
             faceMesh.uv = uvs;
             faceMesh.normals = normals;
             faceMesh.colors = colors;
 
-            string meshPath = planet.AssetsPath + "/GeneratedData/" + planet.uniqueId + "/Mesh/faceCollider" + faceIndex.ToString() + ".asset";
-
-#if UNITY_EDITOR
-            if (!previewMode)
-                AssetDatabase.CreateAsset(faceMesh, meshPath);
-            Mesh generatedMesh = previewMode ? faceMesh : AssetDatabase.LoadAssetAtPath(meshPath, typeof(Mesh)) as Mesh;
-#else
-            Mesh generatedMesh = faceMesh;
-#endif
-
-            meshCollider.sharedMesh = generatedMesh;
-            meshFilter.sharedMesh = generatedMesh;
+            meshCollider.sharedMesh = faceMesh;
+            meshFilter.sharedMesh = faceMesh;
             meshCollider.convex = false;
         }
 
