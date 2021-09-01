@@ -47,5 +47,23 @@ namespace Assets.UI._Scripts.Misc
         {
             return Padding(all, all, all, all);
         }
+
+        public static Color ColorLerp(Color a, Color b, float t)
+        {
+            float normalizedT = Mathf.Clamp01(t);
+
+            float rA = a.r;
+            float gA = a.g;
+            float bA = a.b;
+            float rB = b.r;
+            float gB = b.g;
+            float bB = b.b;
+
+            float red = Mathf.Lerp(rA, rB, normalizedT);
+            float green = Mathf.Lerp(gA, gB, normalizedT);
+            float blue = Mathf.Lerp(bA, bB, normalizedT);
+
+            return new Color(red, green, blue);
+        }
     }
 }
